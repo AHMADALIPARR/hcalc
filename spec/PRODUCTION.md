@@ -61,6 +61,8 @@ So \(\varphi\) is the **identity on coordinates** (diagonal action); \(\alpha\) 
 Equivalent view: \(T_p = \mathrm{diag}(\alpha)\).  
 **Not** Sedona/PIRTM tooling; **not** full PMAT recursion.
 
+**Provenance (§2):** `P64` list = Foundry **source-claim** (prop **23**). The weight law $\alpha_j=1/(1+\log p_{j\bmod 64})$ is **`spec-def`** — **not** a Foundry PROPERTY / not `source-claim` from foundry-j.
+
 ### 3. Gap-C-wrapper → `C` — CLOSED
 
 Let \(D(T_p)\) be the Jacobian of \(T_p\) (here \(D(T_p)=\mathrm{diag}(\alpha)\)).  
@@ -81,6 +83,8 @@ x & \text{otherwise.}
 \]
 
 I.e. \(C = s\cdot\mathrm{id}\) with \(s=\mathrm{softProjectScale}(q,\varepsilon)\).
+
+**Provenance (§3):** Production `C` is **`spec-adapt`**: it reuses the *scale-or-id* idea \((1-\varepsilon)/q\) as an **algorithmic cousin** of Foundry `soft_project` (prop **43**), but it is **not** symbol-identical to **43**. Foundry **43** scales schedule weights \(\Xi,\Lambda\) under Foundry \(q\) (prop **42**); production `C` scales the **state** under Spec \(q:=\|D(T_p)\|_{\mathrm{est}}\). Do **not** tag `C` as Foundry `source-claim` for **43**.
 
 ### 4. Gap-Λm-scalar → `Λm` — CLOSED
 
@@ -147,7 +151,16 @@ These are **different** morphisms in general (\(\xi_t\cdot x\) term present only
 - **Option B (operational default for Core):** implement **only** `hcalcStep` as the production verb; expose `toFoundryStep` as a **cite-only diagnostic** that uses Foundry `rec_step` shape with the parameter table above, **without claiming** `hcalcStep = toFoundryStep`.  
 - **Option C:** when \(\xi_t = 1\) and one rewrites nested as additive on an extended state, document the embedding \(\iota\) and prove `toFoundryStep(t,ι(x)) = ι(hcalcStep(t,x))` — still a morphism, **never** symbol identity.
 
-**Production choice:** **Option B** for Core verbs + Lean `InstanceBridge` record holding the parameter table; **Option C** optional later theorem. **L7 UNBLOCKED** as `structure InstanceBridge` + theorems about the table — **not** as `FoundryStep = hcalcStep`.
+**Production bridgeMode (dual — Foundry J Spec ACCEPT):**
+
+| bridgeMode | Meaning | vs Foundry **39** |
+|------------|---------|-------------------|
+| **FoundryAdditive** | `toFoundryStep` = classical **39**-shaped morphism with InstanceBridge params `T:=C∘Tp`, `Λ:=Λm·1`, `Ξ:=ξ_t` | **ACCEPT** morphism into additive shape — **not** nested |
+| **NestedFaithful** / nested `hcalcStep` | `ξ·(Λm·(C∘Tp)(x))+g` | Spec definitional nested — **REJECT** as prop-**39** `rfl` / identity |
+
+**InstanceBridge** = the explicit parameter table (morphism data), not an equality proof. Hilbert morphism \(T:=C\circ T_p\), \(\Lambda:=\Lambda_m\mathbf{1}\), \(\Xi:=\xi\) maps to **FoundryAdditive** shape only.
+
+**Production choice for Core:** implement **`hcalc_step`** = nested (NestedFaithful semantics); expose `toFoundryStep` only as FoundryAdditive diagnostic. **L7 UNBLOCKED** as `structure InstanceBridge` + dual-mode theorems — **never** `FoundryStep = hcalcStep`.
 
 | Foundry symbol (instance params) | HCALC production value | Identity? |
 |----------------------------------|------------------------|-----------|
@@ -185,6 +198,8 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 
 (residual). **Optimize** = iterate the nested map until \(J(X)<\mathrm{tol}\).
 
+**Provenance (residual):** PRODUCTION \(J\) uses \(\ell_\infty\). Foundry prop **46** residual is \(\ell_2\). **ACCEPT Spec \(\ell_\infty\) choice**; do not claim metric identity with **46** — only stop-spirit / tolerance pattern.
+
 ---
 
 ## Infra gaps (not domain blockers)
@@ -201,8 +216,8 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 | GapId | Was | Now | Alloy action | Lean action | Verify action |
 |-------|-----|-----|--------------|-------------|---------------|
 | Gap-Carrier | axiom-gap | **CLOSED** `HCALC.Carrier = Fin n → ℝ`, ℓ∞ | Instance param → ℝ^n model / abstract n | `def Carrier` | Check A carrier |
-| Gap-Tp-from-P64 | axiom-gap | **CLOSED** \((T_p x)_j=\alpha_j x_j\), \(\alpha_j=1/(1+\log p_{j\bmod 64})\) | Retire Undefined; encode diag Tp | `def Tp` from L1 P64 | Prime carrier + Tp law |
-| Gap-C-wrapper | axiom-gap | **CLOSED** soft_project-or-id on \(q\) | C = scale-or-id pred | `def C` | Contraction spectral/q |
+| Gap-Tp-from-P64 | axiom-gap | **CLOSED** diag \(\alpha\) (**spec-def**); P64 list **source-claim** **23** | Retire Undefined; encode diag Tp | `def Tp` from L1 P64 | Prime carrier + Tp law |
+| Gap-C-wrapper | axiom-gap | **CLOSED** scale-or-id on Spec \(q\) (**spec-adapt**; cousin of **43**, ≠ **43**) | C = scale-or-id | `def C` | Contraction spectral/q |
 | Gap-Λm-scalar | axiom-gap | **CLOSED** scalar min formula | Λm scalar bound assert | `def LambdaM` | Stabilizing range |
 | Gap-Ξ | axiom-gap | **CLOSED** \(\xi_t y + g_t\), Uniform default | Ξ affine | `def Xi` | Evolution step shape |
 | Gap-ShapeMap / L7 | blocked | **CLOSED** `InstanceBridge` morphism (NOT rfl / NOT Foundry39≡nested) | Encode InstanceBridge table; forbid symbol identity | **L7** `structure InstanceBridge` + Option B/C thms | H-SHAPE → PASS only for InstanceBridge witness, never identity |
@@ -266,3 +281,4 @@ Draft names from `foundry-j/j/HCALC_API_DRAFT.md` are **accepted**. Leave Foundr
 
 - 2026-10-07: Initial PRODUCTION close-all-gaps (USER mandate via Hilbert).
 - 2026-10-07: ShapeMap → explicit **InstanceBridge** (Foundry J Spec review); Core path `/workspace/hcalc/j/`.
+- 2026-10-07: Pass-2 absorb — `C`/`q` **spec-adapt** (≠ Foundry **43**/**42**); \(\alpha\) **spec-def**; dual NestedFaithful|FoundryAdditive; residual \(\ell_\infty\neq\ell_2\) note.
