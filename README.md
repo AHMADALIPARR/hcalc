@@ -17,6 +17,9 @@ It records what is defined, what must be axiomatized, and what must remain open 
 
 **Owner (GitHub):** [AHMADALIPARR](https://github.com/AHMADALIPARR).
 
+**Status (2026-10-07 PT):** Production definitions landed in [`spec/PRODUCTION.md`](spec/PRODUCTION.md) — all domain Gap-* **CLOSED** via `InstanceBridge` (NOT `rfl` / NOT Foundry39≡nested); dual `NestedFaithful`|`FoundryAdditive`; A7 → **SpecDefined**; Lean L6 → defs; L7 UNBLOCKED; L5 dischargeable under Hyp. Alloy must replace Undefined; Lean defs not axioms; Verify flip SKIP→PASS where hyps hold. Handoff: [`spec/HANDOFF_PRODUCTION.md`](spec/HANDOFF_PRODUCTION.md). **Not pushed** — waiting Alloy/Lean/Verify green.
+
+
 ---
 
 ## Research posture
@@ -29,7 +32,7 @@ The boxed recurrence above is the **nested** form. Foundry J Core’s closest co
 x' = \Xi\, x + \Lambda\, T(x) + g
 \]
 
-(with soft-projection when a coded \(q\)-budget exceeds \(1-\varepsilon\)). Spec **does not identify** these two shapes. Any future bridge is **Gap-ShapeMap** / steering alias **G-SHAPE**, Lean **L7** (deferred). Alloy asserts both shapes and forbids silent equation (`INV_step_shape_bridge_axiom_gap`, **A4**).
+(with soft-projection when a coded \(q\)-budget exceeds \(1-\varepsilon\)). Spec **does not identify** these two shapes. Gap-ShapeMap is **CLOSED** as explicit **`InstanceBridge`** (parameter table; NOT `rfl`) with dual `bridgeMode` **NestedFaithful**|**FoundryAdditive** — Lean **L7 UNBLOCKED**. Alloy must forbid silent equation / identity (`INV_step_shape`, **A4**).
 
 ---
 
@@ -43,16 +46,16 @@ MULTIMODAL → MULTIPLICITY/TENSOR → PRIME-INDEXED RECURSION (T_p)
 
 | Stage | Role | Status |
 |-------|------|--------|
-| Multimodal → tensor | Carrier / multiplicity | **Gap-Carrier** open |
-| \(T_p\) | Prime-indexed transform | **G-Tp** / Gap-Tp-from-P64 — candidates ≠ definition |
-| \(\Lambda_m\) | Stabilizing **scalar** | **G-Lm** — Foundry `lambda_schedule` is a **vector** |
-| \(\Xi(t,\cdot)\) | Controlled evolution operator | **Gap-Ξ** — ≠ Foundry schedule weights |
+| Multimodal → tensor | Carrier / multiplicity | **CLOSED** — `HCALC.Carrier` ℝ^n (optional Goldilocks later) |
+| \(T_p\) | Prime-indexed transform | **CLOSED** — diag α (**spec-def**) from P64 |
+| \(\Lambda_m\) | Stabilizing **scalar** | **CLOSED** — scalar min formula |
+| \(\Xi(t,\cdot)\) | Controlled evolution operator | **CLOSED** — ξ_t·y+g_t (Uniform default) |
 | Spectral / orthogonal | Analysis / classification | Foundry hooks measure; not in-step \(C\) |
-| \(C[\cdot]\) | In-step contraction wrapper | **G-C** — `spectral_analyze` classifies, does not wrap |
-| Optimize | Objective \(\mathcal{J}\) | **Gap-OptObj** |
-| Converged rep | Fixed point / monitor | **Gap-Converge** — hypotheses required |
+| \(C[\cdot]\) | In-step contraction wrapper | **CLOSED** — scale-or-id (**spec-adapt** ≠ Foundry **43**) |
+| Optimize | Objective \(\mathcal{J}\) | **CLOSED** — residual \(\ell_\infty\); iterate to tol |
+| Converged rep | Fixed point / monitor | **CLOSED** — Hyp ⇒ Banach + residual→0; L5 dischargeable |
 
-Abstract symbols \(X_t\), \(T_p\), \(C\), \(\Lambda_m\), \(\Xi\) are documented as gaps where the source under-specifies them. Alloy and Lean may hold **opaque** symbols or **named axioms**; they must not invent formulas.
+Abstract symbols \(X_t\), \(T_p\), \(C\), \(\Lambda_m\), \(\Xi\) are **defined** in [`spec/PRODUCTION.md`](spec/PRODUCTION.md). Alloy records must be **SpecDefined**; Lean uses **defs** (not opaque axioms) for L6; do not invent beyond PRODUCTION.
 
 ---
 
@@ -68,7 +71,10 @@ hcalc/
     AXIOMS.md                  GapIds A1–A7, L1–L7, Gap-*, G-* aliases
     PROPERTIES.md              Verify outline (Foundry pattern)
     INTERFACES.md              Alloy vs Lean contracts
+    PRODUCTION.md             production defs + Gap disposition (CLOSED)
+    HANDOFF_PRODUCTION.md     copy-paste Alloy/Lean/Verify/Core
     FOUNDRY_J_CROSSLINKS.md    absorbed Spec input (preserve)
+    FOUNDRY_J_PRODUCTION_REVIEW.md  Foundry J Spec review mirror
   alloy/
     HCALC.als                  top-level checks A1–A7 + INV_*
     modules/*.als              State, PrimeIndex, Transform, Recursion,
@@ -82,6 +88,7 @@ hcalc/
   docs/
     INVARIANTS.md              Alloy asserts ↔ Lean theorem/axiom map
     REMAINING.md               open Lean research after L6
+  j/                          HCALC production J verbs (Core path)
   verify/
     README.md                  stub → Foundry Verify gate proposal
 ```
@@ -102,7 +109,7 @@ Ownership convention: Spec owns GapId meanings; Alloy owns `.als`; Lean owns `.l
 | A4 | Foundry additive step only if `instance = Foundry` | source-claim (**39**, gated) |
 | A5 | PMAT conservation if PMAT used | source-claim (**29**) |
 | A6 | guardian rejects \(\rho \ge 1\) or non-finite | source-claim (**55**) |
-| A7 | definition-**record** present for Λm, Ξ, C, Tp — not formulas | axiom-gap |
+| A7 | definition-**record** present for Λm, Ξ, C, Tp — **SpecDefined** | SpecDefined (CLOSED) |
 
 ### Lean L1–L7
 
@@ -112,9 +119,9 @@ Ownership convention: Spec owns GapId meanings; Alloy owns `.als`; Lean owns `.l
 | L2 | def (+ iff) | `gershgorinBound`, `contractiveG` |
 | L3 | def | `FoundryStep` = prop **39**; ≠ nested |
 | L4 | def / axioms | `qEstimate`, `softProject` control flow |
-| L5 | unfinished axiom | Banach unique FP only under explicit hyps |
-| L6 | axioms | Λm, Ξ, C, Tp (+ related ops) — do not invent |
-| L7 | **deferred** | bridge nested ↔ additive |
+| L5 | theorem (dischargeable) | Banach unique FP under PRODUCTION Hyp |
+| L6 | **defs** | Λm, Ξ, C, Tp — PRODUCTION §§2–5 |
+| L7 | **UNBLOCKED** | `InstanceBridge` + dual bridgeMode — NOT `rfl` |
 
 ### Steering aliases
 
@@ -155,9 +162,9 @@ Invariant table mapping Alloy ↔ Lean: [`docs/INVARIANTS.md`](docs/INVARIANTS.m
 Project `Hcalc` targets Lean 4 **v4.34.1** via elan. **No Mathlib** in the first cut (opaque `Real` stub). **Zero `sorry`.** Policy:
 
 - Prefer **definitions** where Foundry is concrete (L1–L4).
-- Use **named axioms** keyed by GapId for under-specified HCALC symbols (L6).
-- State convergence / stability **only** with hypotheses in the theorem (or axiom) statement.
-- Do **not** introduce an L7 bridge constant.
+- Replace L6 with **defs** from PRODUCTION.md (no opaque domain axioms).
+- State convergence / stability **only** with hypotheses (L5 under Hyp).
+- Introduce L7 as `structure InstanceBridge` + dual-mode theorems — **not** `FoundryStep = hcalcStep`.
 
 ```bash
 export PATH="$HOME/.elan/bin:$PATH"
@@ -185,23 +192,21 @@ Primary Spec note: [`spec/FOUNDRY_J_CROSSLINKS.md`](spec/FOUNDRY_J_CROSSLINKS.md
 
 ## Open problems
 
-1. Explicit scalar \(\Lambda_m\) and stabilizing range (**G-Lm**).  
-2. Formal operator \(\Xi(t,\cdot)\) (**Gap-Ξ**).  
-3. Tensor / Banach / \(\mathbb{F}_p\) carrier for \(X_t\) (**Gap-Carrier**).  
-4. Convergence conditions for the **nested** recurrence (**Gap-Converge**).  
-5. In-step contraction algorithm realizing \(C\) (**G-C**, **Gap-ContractAlg**).  
-6. Optimization objective \(\mathcal{J}\) (**Gap-OptObj**).  
-7. Shape map nested HCALC ↔ additive Foundry39 (**G-SHAPE** / **L7**).  
-8. Law giving \(T_p\) from `P_64` / PrimeMask / PMAT (**G-Tp**).
+Domain Gap-* are **CLOSED** in [`spec/PRODUCTION.md`](spec/PRODUCTION.md). Remaining optional / infra only:
+
+1. Optional Goldilocks \(\mathbb{F}_p\) carrier instance (Foundry **1–17**).  
+2. Mathlib migration replacing RealStub / Gap-Foundry-* infra stubs.  
+3. Empirical ε tier tuning beyond default T2=0.05.  
+4. Optional Option C embedding morphism theorem (still not identity).
 
 ---
 
 ## Contributing
 
-1. Close or refine Gap-* **in Spec first** (no silent invention in Alloy/Lean).  
-2. Alloy: keep A1–A7 + Inv-* with Provenance tags; never equate shapes without Gap-ShapeMap discharge.  
-3. Lean: extend L1–L4; keep L6 named; leave L7 deferred; no `sorry`.  
-4. Verify: implement harness per `spec/PROPERTIES.md` with SKIP registry.  
+1. Follow [`spec/PRODUCTION.md`](spec/PRODUCTION.md) + [`spec/HANDOFF_PRODUCTION.md`](spec/HANDOFF_PRODUCTION.md).  
+2. Alloy: A1–A7 SpecDefined; dual bridgeMode; never equate NestedFaithful with prop-**39**.  
+3. Lean: L1–L6 defs; L7 InstanceBridge; L5 under Hyp; no `sorry`.  
+4. Verify: flip SKIP→PASS where hyps hold; H-SHAPE never identity PASS.  
 5. License contributions under **AGPL-3.0-only**.
 
-This README is architecture documentation for the research center, not a claim that HCALC is solved.
+This README is architecture documentation for the research center. Production formulas are in Spec; Alloy/Lean/Verify/Core must implement without inventing beyond the mandate.
