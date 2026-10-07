@@ -1,43 +1,44 @@
-=== HCALC Alloy PRODUCTION check 2026-10-07T09:50:00-07:00 PT ===
+=== HCALC Alloy PRODUCTION check 2026-10-07T09:41:38-07:00 PT ===
 als: /workspace/hcalc/alloy/HCALC.als
 alloy: 6.2.0
-note: per-command exec -t text (no -q); UNSAT = PASS. A1/A1b/A6/P1 remeasured after SIGTERM flake.
+cite: PRODUCTION.md (C spec-adapt cousin!=43; InstanceBridge; alpha Spec)
+note: per-command exec -t text; UNSAT = PASS for checks; SAT expected for optional runs
 
 === A1-A7 sealed PROPERTY_MAP (UNSAT = pass) ===
-00. check A1_P64_cardinality_and_distinct              UNSAT (PASS)
-01. check A1b_P64_distinct_indices                     UNSAT (PASS)
-02. check A2_contractive_iff_gershgorin_bound          UNSAT (PASS)
-03. check A3_soft_project_when_q_over_margin           UNSAT (PASS)
-04. check A4_foundry_additive_only_if_Foundry_instance UNSAT (PASS)
-05. check A5_PMAT_conservation_gated                   UNSAT (PASS)
-06. check A6_guardian_reject_spectral_or_nonfinite     UNSAT (PASS)
-07. check A7_production_defined_records                UNSAT (PASS)
+A1_P64_cardinality_and_distinct              UNSAT (PASS)
+A1b_P64_distinct_indices                     UNSAT (PASS)
+A2_contractive_iff_gershgorin_bound          UNSAT (PASS)
+A3_soft_project_when_q_over_margin           UNSAT (PASS)
+A4_foundry_additive_only_if_Foundry_instance UNSAT (PASS)
+A5_PMAT_conservation_gated                   UNSAT (PASS)
+A6_guardian_reject_spectral_or_nonfinite     UNSAT (PASS)
+A7_production_defined_records                UNSAT (PASS)
 
 === Production P1-P8 (UNSAT = pass) ===
-check P1_carrier_linf_dim                              UNSAT (PASS)
-check P2_tp_diag_spec_alpha                            UNSAT (PASS)
-check P3_c_scale_or_id                                 UNSAT (PASS)
-check P4_lambda_m_scalar_bound                         UNSAT (PASS)
-check P5_xi_uniform_affine                             UNSAT (PASS)
-check P6_instance_bridge_morphism                      UNSAT (PASS)
-check P7_optobj_residual                               UNSAT (PASS)
-check P8_contractalg_gershgorin_then_c                 UNSAT (PASS)
+P1_carrier_linf_dim                          UNSAT (PASS)
+P2_tp_diag_spec_alpha                        UNSAT (PASS)
+P3_c_scale_or_id                             UNSAT (PASS)
+P4_lambda_m_scalar_bound                     UNSAT (PASS)
+P5_xi_uniform_affine                         UNSAT (PASS)
+P6_instance_bridge_morphism                  UNSAT (PASS)
+P7_optobj_residual                           UNSAT (PASS)
+P8_contractalg_gershgorin_then_c             UNSAT (PASS)
 
 === INV_* checks (UNSAT = pass) ===
-INV_LambdaM_scalar_placeholder                         UNSAT (PASS)
-INV_step_shape_bridge_instance                         UNSAT (PASS)
-INV_prime_index_bounded_to_P64                         UNSAT (PASS)
-INV_recursion_uses_prime_index                         UNSAT (PASS)
-INV_contract_measure_non_increase                      UNSAT (PASS)
-INV_optimize_objective_residual                        UNSAT (PASS)
-INV_converge_hyps_production                           UNSAT (PASS)
-INV_evolution_total_on_State                           UNSAT (PASS)
-INV_multimodal_tensor_wiring                           UNSAT (PASS)
-INV_evolve_total_State_reachable                       UNSAT (PASS)
+INV_LambdaM_scalar_placeholder               UNSAT (PASS)
+INV_step_shape_bridge_instance               UNSAT (PASS)
+INV_prime_index_bounded_to_P64               UNSAT (PASS)
+INV_recursion_uses_prime_index               UNSAT (PASS)
+INV_contract_measure_non_increase            UNSAT (PASS)
+INV_optimize_objective_residual              UNSAT (PASS)
+INV_converge_hyps_production                 UNSAT (PASS)
+INV_evolution_total_on_State                 UNSAT (PASS)
+INV_multimodal_tensor_wiring                 UNSAT (PASS)
+INV_evolve_total_State_reachable             UNSAT (PASS)
 
 === optional runs (SAT = instance found, expected) ===
-show_hcalc_trace                                       SAT (instance)
-show_foundry_trace                                     SAT (instance)
+show_hcalc_trace                             SAT (instance)
+show_foundry_trace                           SAT (instance)
 
 === summary ===
 checks_UNSAT_PASS=26 checks_FAIL=0 runs_SAT=2

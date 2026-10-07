@@ -1,0 +1,40 @@
+Using jconsole: /home/box/j/j9.7/bin/jconsole
+Working directory: /workspace/hcalc/verify
+Timestamp (PT): 2026-10-07 09:38:28 PDT
+HCALC Core present: yes
+Foundry load: cite-only (not loaded)
+────────────────────────────────────────
+HCALC — Verification Harness
+═══════════════════════════════════════
+jconsole: j9.7.1/j64/linux/commercial/www.jsoftware.com/2026-04-06T04:00:54/clang-14-0-0/SLEEF=0
+core: /workspace/hcalc/j/hcalc.ijs (HCALC Core; Foundry cite-only)
+rule: FAIL-open; InstanceBridge witness ≠ identity; no Foundry-as-Core
+
+PRODUCTION.md present: 1
+Core present: 1
+
+── H-* properties + SKIP registry ──
+PASS H-A1
+PASS H-A2
+PASS H-A3
+PASS H-A4
+SKIP H-A5: PMAT unused on production Core path (no pmat_* in hcalc_step)
+SKIP H-A6: no Core guardian verb (A6 cite-only until guardian lands in j/)
+PASS H-A7
+PASS H-SHAPE
+PASS H-L5
+PASS H-NEST
+PASS SKIP-ShapeBridge
+PASS SKIP-Λm-formula
+PASS SKIP-C-instep
+PASS SKIP-Tp-law
+PASS SKIP-Ξ-op
+PASS SKIP-OptObj
+PASS SKIP-L5-proof
+SKIP SKIP-Goldilocks16: Foundry prop 16 FAIL — do not claim PASS lift
+
+═══════════════════════════════════════
+PASS=15 FAIL=0 SKIP=3 BLOCKED=0
+────────────────────────────────────────
+exit_code=0
+log=logs/run-20261007-093828.log
