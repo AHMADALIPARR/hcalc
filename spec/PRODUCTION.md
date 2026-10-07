@@ -84,7 +84,7 @@ x & \text{otherwise.}
 
 I.e. \(C = s\cdot\mathrm{id}\) with \(s=\mathrm{softProjectScale}(q,\varepsilon)\).
 
-**Provenance (§3):** Production `C` is **`spec-adapt`**: it reuses the *scale-or-id* idea \((1-\varepsilon)/q\) as an **algorithmic cousin** of Foundry `soft_project` (prop **43**), but it is **not** symbol-identical to **43**. Foundry **43** scales schedule weights \(\Xi,\Lambda\) under Foundry \(q\) (prop **42**); production `C` scales the **state** under Spec \(q:=\|D(T_p)\|_{\mathrm{est}}\). Do **not** tag `C` as Foundry `source-claim` for **43**.
+**Provenance (§3):** Production `C` is **`spec-adapt`**: it reuses the *scale-or-id* idea \((1-\varepsilon)/q\) as an **algorithmic cousin** of Foundry `soft_project` (prop **43**), but it is **not** symbol-identical to **43**. Foundry **43** scales schedule weights \(\Xi,\Lambda\) under Foundry \(q\) (prop **42**); production `C` scales the **state** under Spec \(q:=\|D(T_p)\|_{\mathrm{est}}\). Do **not** tag `C` as Foundry `source-claim` for **43**. Shared helper name `softProjectScale` OK; **Foundry `soft_project` API stays schedule-scaling** (prop **43**). Production `C` remains Spec-wiring / **spec-adapt** (state scale).
 
 ### 4. Gap-Λm-scalar → `Λm` — CLOSED
 
@@ -179,16 +179,18 @@ Algorithm (Foundry **33–43**):
 
 ### 8. Gap-Converge — CLOSED (L5 dischargeable)
 
-**Hyp:**
+**Hyp** (for iteration of **`hcalcStep`** — Option B / nested production path):
 
 \[
-\|\Lambda_m\cdot(C\circ T_p)\|_{\mathrm{op}} + \mathrm{margin}(\xi) < 1-\varepsilon
+|\xi_t|\cdot\|\Lambda_m\cdot(C\circ T_p)\|_{\mathrm{op}} < 1-\varepsilon.
 \]
 
-with \(\mathrm{margin}(\xi)=0\) under Uniform \(\xi_t=1\) when using InstanceBridge (operator is exactly \(\Lambda_m(C\circ T_p)\) scaled by \(\xi_t\); require \(|\xi_t|\cdot\|\Lambda_m(C\circ T_p)\|_{\mathrm{op}} < 1-\varepsilon\)).
+Under Uniform \(\xi_t=1\) this is \(\|\Lambda_m\cdot(C\circ T_p)\|_{\mathrm{op}} < 1-\varepsilon\).
 
-Then: Banach unique fixed point (Foundry narrative **41**) and residual (**46**) \(\to 0\) along iteration.  
-**L5:** theorem under Hyp (prove in Lean or keep as named theorem with Hyp; not unfinished axiom).
+Do **not** state Hyp on `toFoundryStep` / classical additive shape without an extra account of the free \(\xi_t\cdot x\) term (that diagnostic has a different operator).
+
+Then: Banach unique fixed point (Foundry narrative **41**, spirit) and residual \(\to 0\) along **`hcalcStep`** iteration (stop spirit of **46**; metric is Spec \(\ell_\infty\)).  
+**L5:** theorem under Hyp (prove in Lean; not unfinished axiom).
 
 ### 9. Gap-OptObj — CLOSED
 
@@ -233,10 +235,11 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 ## Alloy checklist
 
 1. Retire all `Undefined` on Λm, Ξ, C, Tp → `SpecDefined` / production preds.  
-2. Keep A1–A6; rewire A2/A3/A4 to production C/Λm/ShapeMap.  
-3. Assert InstanceBridge bridge; do **not** equate FoundryAdditive without bridgeMode.  
-4. OptObj = residual; ContractAlg as above.  
+2. Keep A1–A6; rewire A2/A3/A4 to production C/Λm/`InstanceBridge`.  
+3. Encode **`bridgeMode`**: nested **`hcalcStep`** vs diagnostic **`toFoundryStep`** (InstanceBridge param table). Do **not** assert Foundry39≡nested; do **not** use a bare `FoundryAdditive` equate without InstanceBridge params.  
+4. OptObj = residual (\(\ell_\infty\)); ContractAlg = Gershgorin→power-iter→Spec scale-or-id.  
 5. Report check log green.
+
 
 ## Lean checklist
 
@@ -281,4 +284,5 @@ Draft names from `foundry-j/j/HCALC_API_DRAFT.md` are **accepted**. Leave Foundr
 
 - 2026-10-07: Initial PRODUCTION close-all-gaps (USER mandate via Hilbert).
 - 2026-10-07: ShapeMap → explicit **InstanceBridge** (Foundry J Spec review); Core path `/workspace/hcalc/j/`.
+- 2026-10-07: Pass-3 nits — §3 schedule-scaling note; Alloy checklist InstanceBridge; §8 Hyp on hcalcStep.
 - 2026-10-07: Pass-2 absorb — `C`/`q` **spec-adapt** (≠ Foundry **43**/**42**); \(\alpha\) **spec-def**; dual NestedFaithful|FoundryAdditive; residual \(\ell_\infty\neq\ell_2\) note.
