@@ -106,50 +106,55 @@ Therefore
 X_{t+1} = \xi_t\cdot\bigl(\Lambda_m\cdot C(T_p(X_t))\bigr) + g_t.
 \]
 
-### 6. Gap-ShapeMap / L7 — CLOSED (UNBLOCKED)
+### 6. Gap-ShapeMap / L7 — CLOSED via **InstanceBridge** (NOT `rfl`)
 
-Foundry additive step (prop **39**):
+**REJECTED (Foundry J Spec review):** identity `Foundry39 ≡ nested`; silent `Λ_t↔Λm`, `T↔T_p`, `Ξ_t↔Ξ(t,·)`, Gershgorin/`soft_project` measures ↔ in-step `C` as Foundry-native law.
 
-\[
-\texttt{FoundryStep}(\Xi_{\mathrm{vec}},\Lambda_{\mathrm{vec}},T,g,x)
-  = \Xi_{\mathrm{vec}}\cdot x + \Lambda_{\mathrm{vec}}\cdot T(x) + g.
-\]
+**ACCEPTED:** Gap-ShapeMap is a **non-identity** morphism. soft_project remains **Foundry-coded** (props **42–43**) and is *used by* HCALC `C` under this Spec — that is Spec wiring, not a Foundry identity claim.
 
-**Bridge identification** (definitional once carriers match):
+#### Explicit morphism `InstanceBridge`
 
-| Foundry symbol | HCALC production |
-|----------------|------------------|
-| \(T\) | \(C\circ T_p\) |
-| \(\Lambda_{\mathrm{vec}}\) | \(\Lambda_m\cdot\mathbf{1}\) (scalar broadcast) |
-| \(\Xi_{\mathrm{vec}}\) | \(\xi_t\) (Uniform: \(1\)) |
-| \(g\) | \(g_t\) |
-
-Then, when \(\Xi_{\mathrm{vec}}\) acts as scalar multiply on the whole state (Uniform / shared ξ),
+Let HCALC state \(x\in\texttt{HCALC.Carrier}\). Define a **labeled instance map** (Lean: `InstanceBridge`, Alloy: `bridgeMode = InstanceBridge`):
 
 \[
-\texttt{FoundryStep}(\xi_t,\, \Lambda_m\mathbf{1},\, C\circ T_p,\, g_t,\, x)
-  \;=\;
-  \xi_t\cdot x + \Lambda_m\cdot(C\circ T_p)(x) + g_t.
+\texttt{toFoundryStep}(t,x)
+\;:=\;
+\texttt{FoundryStep}\bigl(
+  \Xi_{\mathrm{vec}}:=\xi_t,\;
+  \Lambda_{\mathrm{vec}}:=\Lambda_m\cdot\mathbf{1},\;
+  T := C\circ T_p,\;
+  g := g_t,\;
+  x
+\bigr)
+\;=\;
+\xi_t\cdot x + \Lambda_m\cdot(C\circ T_p)(x) + g_t.
 \]
 
-**Nested HCALC** expands to \(\xi_t\cdot(\Lambda_m\cdot C(T_p(x))) + g_t\).  
-These agree when \(\xi_t\) scales only the stabilized branch (nested) vs also the identity term (additive).  
-
-**Production bridge theorem (L7) — choose nested-faithful embedding:**
-
-Define the Foundry instance of one HCALC step by **dropping the free \(\Xi_{\mathrm{vec}}\cdot x\) term into the kick** or equivalently use the **HCALC-aligned Foundry form**:
+The **HCALC nested step** is separately:
 
 \[
-\texttt{FoundryStep}_{\mathrm{HCALC}}(\xi_t,\Lambda_m,C\circ T_p,g_t,x)
-  \;:=\;
-  \xi_t\cdot\bigl(\Lambda_m\cdot (C\circ T_p)(x)\bigr) + g_t
-  \;=\;
-  \Xi(t,\, \Lambda_m\cdot C(T_p(x))).
+\texttt{hcalcStep}(t,x)
+\;:=\;
+\Xi\bigl(t,\, \Lambda_m\cdot C(T_p(x))\bigr)
+\;=\;
+\xi_t\cdot\bigl(\Lambda_m\cdot C(T_p(x))\bigr) + g_t.
 \]
 
-This is **definitional equality** of the nested step with a Foundry-shaped operator application under the table above with \(\Xi_{\mathrm{vec}}\) applied to the \(T\)-branch only (document as `bridgeMode = NestedFaithful`).  
-Classical prop-**39** full additive form remains available as `bridgeMode = FoundryAdditive` and is **not** silently identified with nested; Alloy/Lean must set `bridgeMode` explicitly.  
-**L7 UNBLOCKED** for `NestedFaithful`.
+These are **different** morphisms in general (\(\xi_t\cdot x\) term present only on the Foundry side).  
+**L7 theorem (production):** there exists an explicit Spec-named witness relating them — *not* `rfl`:
+
+- **Option A (recommended default):** `bridgeWitness = Projective` — equality after applying the HCALC projection that discards the free \(\xi_t\cdot x\) drift, or equivalently require \(\xi_t=0\) on the identity channel (not used).  
+- **Option B (operational default for Core):** implement **only** `hcalcStep` as the production verb; expose `toFoundryStep` as a **cite-only diagnostic** that uses Foundry `rec_step` shape with the parameter table above, **without claiming** `hcalcStep = toFoundryStep`.  
+- **Option C:** when \(\xi_t = 1\) and one rewrites nested as additive on an extended state, document the embedding \(\iota\) and prove `toFoundryStep(t,ι(x)) = ι(hcalcStep(t,x))` — still a morphism, **never** symbol identity.
+
+**Production choice:** **Option B** for Core verbs + Lean `InstanceBridge` record holding the parameter table; **Option C** optional later theorem. **L7 UNBLOCKED** as `structure InstanceBridge` + theorems about the table — **not** as `FoundryStep = hcalcStep`.
+
+| Foundry symbol (instance params) | HCALC production value | Identity? |
+|----------------------------------|------------------------|-----------|
+| \(T\) | \(C\circ T_p\) | **no** — assignment under InstanceBridge |
+| \(\Lambda_{\mathrm{vec}}\) | \(\Lambda_m\cdot\mathbf{1}\) | **no** — scalar broadcast ≠ Foundry schedule vector law |
+| \(\Xi_{\mathrm{vec}}\) | \(\xi_t\) from HCALC `xi_schedule` | **no** — not Foundry \(\Xi_t\) vector schedule identity |
+| \(g\) | \(g_t\) | instance param |
 
 ### 7. Gap-ContractAlg — CLOSED
 
@@ -167,7 +172,7 @@ Algorithm (Foundry **33–43**):
 \|\Lambda_m\cdot(C\circ T_p)\|_{\mathrm{op}} + \mathrm{margin}(\xi) < 1-\varepsilon
 \]
 
-with \(\mathrm{margin}(\xi)=0\) under Uniform \(\xi_t=1\) when using NestedFaithful (operator is exactly \(\Lambda_m(C\circ T_p)\) scaled by \(\xi_t\); require \(|\xi_t|\cdot\|\Lambda_m(C\circ T_p)\|_{\mathrm{op}} < 1-\varepsilon\)).
+with \(\mathrm{margin}(\xi)=0\) under Uniform \(\xi_t=1\) when using InstanceBridge (operator is exactly \(\Lambda_m(C\circ T_p)\) scaled by \(\xi_t\); require \(|\xi_t|\cdot\|\Lambda_m(C\circ T_p)\|_{\mathrm{op}} < 1-\varepsilon\)).
 
 Then: Banach unique fixed point (Foundry narrative **41**) and residual (**46**) \(\to 0\) along iteration.  
 **L5:** theorem under Hyp (prove in Lean or keep as named theorem with Hyp; not unfinished axiom).
@@ -200,7 +205,7 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 | Gap-C-wrapper | axiom-gap | **CLOSED** soft_project-or-id on \(q\) | C = scale-or-id pred | `def C` | Contraction spectral/q |
 | Gap-Λm-scalar | axiom-gap | **CLOSED** scalar min formula | Λm scalar bound assert | `def LambdaM` | Stabilizing range |
 | Gap-Ξ | axiom-gap | **CLOSED** \(\xi_t y + g_t\), Uniform default | Ξ affine | `def Xi` | Evolution step shape |
-| Gap-ShapeMap / L7 | blocked | **CLOSED** NestedFaithful bridge; FoundryAdditive distinct | Unblock ShapeMap; set bridgeMode | **L7 def/thm** NestedFaithful | H-SHAPE → PASS under NestedFaithful |
+| Gap-ShapeMap / L7 | blocked | **CLOSED** `InstanceBridge` morphism (NOT rfl / NOT Foundry39≡nested) | Encode InstanceBridge table; forbid symbol identity | **L7** `structure InstanceBridge` + Option B/C thms | H-SHAPE → PASS only for InstanceBridge witness, never identity |
 | Gap-ContractAlg | axiom-gap | **CLOSED** Gershgorin→power-iter→soft_project | A2/A3 production wiring | defs + thms | Checks B |
 | Gap-Converge | axiom-gap | **CLOSED** Hyp ⇒ Banach + residual→0 | Guardian + residual | **L5** under Hyp | Residual discharge |
 | Gap-OptObj | axiom-gap | **CLOSED** \(J=\) residual; iterate to tol | OptObj residual | `def J` + loop spec | Optimize/converge props |
@@ -214,14 +219,14 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 
 1. Retire all `Undefined` on Λm, Ξ, C, Tp → `SpecDefined` / production preds.  
 2. Keep A1–A6; rewire A2/A3/A4 to production C/Λm/ShapeMap.  
-3. Assert NestedFaithful bridge; do **not** equate FoundryAdditive without bridgeMode.  
+3. Assert InstanceBridge bridge; do **not** equate FoundryAdditive without bridgeMode.  
 4. OptObj = residual; ContractAlg as above.  
 5. Report check log green.
 
 ## Lean checklist
 
 1. `Carrier`, `Tp`, `C`, `LambdaM`, `Xi`, `J` as **defs**.  
-2. Unblock **L7** NestedFaithful (`def` / theorem).  
+2. Unblock **L7** InstanceBridge (`def` / theorem).  
 3. **L5** theorem under Hyp (0 sorry).  
 4. Infra RealStub only if no production sorry.  
 5. `lake build` exit 0.
@@ -229,16 +234,35 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 ## Verify checklist
 
 1. Flip SKIP→PASS where hyps hold (A–E).  
-2. H-SHAPE PASS under NestedFaithful.  
+2. H-SHAPE PASS under InstanceBridge.  
 3. FAIL-open still if Lean sorry / Alloy unsat.  
 4. Update `PROPERTY_MAP.md`.
 
 ## Core checklist (Foundry J)
 
-Implement verbs: `Tp` from P64 α, in-step `C` soft_project, scalar `Λm`, `Xi` from `xi_schedule`, NestedFaithful step. Cite `P64`, `spectral_analyze`, `soft_project`, `q_estimate`, `synth_weights`, `rec_step`.
+Implement verbs: `Tp` from P64 α, in-step `C` soft_project, scalar `Λm`, `Xi` from `xi_schedule`, InstanceBridge step. Cite `P64`, `spectral_analyze`, `soft_project`, `q_estimate`, `synth_weights`, `rec_step`.
 
 ---
 
+
+## Core implement path (AUTHORITATIVE)
+
+**Path:** `/workspace/hcalc/j/` (HCALC research-center repo; AGPL-3.0-only).  
+Foundry J Core implements production verbs **here**, calling Foundry cite hooks from `foundry-j` (`P64`, `spectral_analyze`, `soft_project`, `q_estimate`, `synth_weights`) without equating `hcalc_step` to `rec_step`.
+
+| Verb | Formula source in this file |
+|------|-----------------------------|
+| `tp_from_p64` | §2 Gap-Tp-from-P64 |
+| `c_wrap` | §3 Gap-C-wrapper (uses Foundry-coded soft_project) |
+| `lam_m_from_bound` | §4 Gap-Λm-scalar |
+| `hcalc_xi_apply` | §5 Gap-Ξ |
+| `hcalc_step` | nested §5; **not** `rec_step` |
+| `hcalc_run` | iterate `hcalc_step` until §9 residual < tol |
+
+Draft names from `foundry-j/j/HCALC_API_DRAFT.md` are **accepted**. Leave Foundry additive API unchanged.
+
+---
 ## Changelog
 
 - 2026-10-07: Initial PRODUCTION close-all-gaps (USER mandate via Hilbert).
+- 2026-10-07: ShapeMap → explicit **InstanceBridge** (Foundry J Spec review); Core path `/workspace/hcalc/j/`.
