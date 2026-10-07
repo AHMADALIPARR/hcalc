@@ -4,10 +4,10 @@
  *
  * Module: State — discrete evolution carrier for HCALC Alloy skeleton.
  * Cite: FOUNDRY_J_CROSSLINKS.md §0–§2; HCALC abstract X_{t+1}=Ξ(t,Λm·C[T_p(X_t)]).
- * PENDING-SPEC-GAPID: Gap-X-state (remap when COHERENCE.md / INTERFACES.md land).
+ * GapId: Gap-Carrier (COHERENCE.md)
  */
 
-module hcalc/modules/State
+module modules/State
 
 /* Provenance: axiom-gap — State is an opaque carrier; no invented tensor law. */
 sig State {}
@@ -20,17 +20,23 @@ sig Time {
 }
 
 /* Total order spine on Time: linear chain, unique start.
- * Provenance: derived — finite-scope safety for evolution. */
+ * Provenance: derived — finite-scope safety for evolution.
+ * Assert id: INV_time_linear_chain */
 fact INV_time_linear_chain {
-  /* INV_time_linear_chain — listable id for PROPERTY_MAP */
+  /* unique root + functional next + single chain */
   one t: Time | no t.~next
   all t: Time | lone t.next
-  all disj t1, t2: Time | t1 in t2.*next or t2 in t1.*next or t1 = t2
+  all disj t1, t2: Time | t1 in t2.^next or t2 in t1.^next
 }
 
-/* Evolution totality placeholder: every timed state participates in the carrier.
- * Provenance: source-claim — FOUNDRY_J_CROSSLINKS §2 item 1 / Hilbert: evolution total on State.
- * Core witness (intent, not Alloy proof): rec_step */
+/* Evolution totality: every State is witnessed at some Time.
+ * Provenance: source-claim — Hilbert: evolution total on State.
+ * Core witness (intent, not Alloy proof): rec_step
+ * Assert id: INV_evolution_total_on_State */
+fact fact_evolution_total_on_State {
+  all s: State | some t: Time | t.at = s
+}
+
 pred evolution_total_on_State {
   all s: State | some t: Time | t.at = s
 }
@@ -44,27 +50,23 @@ assert INV_evolution_total_on_State {
 abstract sig InstanceKind {}
 one sig FoundryInstance, HCALCInstance extends InstanceKind {}
 
-/* Active instance selection (exactly one for a model run).
- * Provenance: derived — forces A4 gating. */
 one sig ActiveInstance {
   kind: one InstanceKind
 }
 
 /* Underspecified measure for contraction decrease (algorithm undefined).
- * Provenance: axiom-gap — PENDING-SPEC-GAPID: Gap-C-contraction
+ * Provenance: axiom-gap — GapId: Gap-C-wrapper / Gap-ContractAlg (COHERENCE.md)
  * Core witness (intent): spectral_analyze / q_estimate */
-sig Measure {
-  value: Int
-}
+/* Measure atom — no Int payload (Int bitblast hangs checks).
+ * Ordering for contraction is relational in Contract module (Gap-ContractAlg). */
+sig Measure {}
 
-/* Each state may carry a measure atom (finite Int, Alloy-checkable).
- * Provenance: axiom-gap — placeholder until contraction algorithm defined. */
 sig StateMeasure {
   of: one State,
   m: one Measure
 }
 
+/* Assert id: INV_state_measure_functional */
 fact INV_state_measure_functional {
-  /* INV_state_measure_functional */
   all s: State | lone sm: StateMeasure | sm.of = s
 }

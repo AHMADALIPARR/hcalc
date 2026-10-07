@@ -1,0 +1,20 @@
+0 . Check A1_P64_cardinality_and_distinct for 5 but 8 int, exactly 1 P64Carrier, 8 PrimeLabel
+1 . Check A1b_P64_distinct_indices for 5 but 8 int, exactly 1 P64Carrier, 8 PrimeLabel
+2 . Check A2_contractive_iff_gershgorin_bound for 5 but 8 int
+3 . Check A3_soft_project_when_q_over_margin for 5 but 8 int
+4 . Check A4_foundry_additive_only_if_Foundry_instance for 5 but 8 int, exactly 1 ActiveInstance
+5 . Check A5_PMAT_conservation_gated for 5 but 8 int
+6 . Check A6_guardian_reject_spectral_or_nonfinite for 5 but 8 int
+7 . Check A7_gap_stub_definition_records for 5 but 8 int
+8 . Check INV_LambdaM_scalar_placeholder for 5 but 8 int, exactly 1 LambdaM
+9 . Check INV_step_shape_bridge_axiom_gap for 5 but 8 int
+10. Check INV_prime_index_bounded_to_P64 for 5 but 8 int, exactly 1 P64Carrier, 8 PrimeLabel
+11. Check INV_recursion_uses_prime_index for 5 but 8 int, 8 PrimeLabel
+12. Check INV_contract_measure_non_increase for 5 but 8 int
+13. Check INV_optimize_objective_axiom_gap for 5 but 8 int
+14. Check INV_converge_hyps_axiom_gap for 5 but 8 int
+15. Check INV_evolution_total_on_State for 5 but 8 int, 5 Time, 5 State
+16. Check INV_multimodal_tensor_wiring for 5 but 8 int
+17. Check INV_evolve_total_State_reachable for 5 but 8 int, 5 Time, 5 State
+18. Run show_hcalc_trace for 4 but 8 int, exactly 1 ActiveInstance, exactly 1 HCALCInstance, 3 Time, 3 State, 2 TpMap, 1 HCALC_Xi, 1 COp, 1 Intermediate
+19. Run show_foundry_trace for 4 but 8 int, exactly 1 ActiveInstance, exactly 1 FoundryInstance, 3 Time, 3 State

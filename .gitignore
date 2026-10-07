@@ -1,4 +1,34 @@
-alloy/tools/*.jar
-alloy/logs/
+# Lean / Lake
+lean/.lake/
+lean/build/
+lean/lake-packages/
 *.olean
-.lake/
+*.ilean
+*.c
+*.o
+
+# Alloy / Java
+alloy/logs/*.tmp
+*.class
+.alloy/
+
+# Editor / OS
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Secrets
+.env
+*.pem
+
+alloy/tools/
+*.jar
+lean/.lake/
+lean/build/

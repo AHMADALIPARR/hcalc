@@ -1,0 +1,34 @@
+=== HCALC Alloy check 2026-10-07T09:17:37-07:00 ===
+als: /workspace/hcalc/alloy/HCALC.als
+6.2.0
+
+=== commands ===
+0 . Check A1_P64_cardinality_and_distinct for 5 but 8 int, exactly 1 P64Carrier, 8 PrimeLabel
+1 . Check A1b_P64_distinct_indices for 5 but 8 int    0       UNSAT
+01. check A1b_P64_distinct_indices     0       UNSAT
+02. check A2_contractive_iff_gershgorin_bound     0       UNSAT
+03. check A3_soft_project_when_q_over_margin     0       UNSAT
+04. check A4_foundry_additive_only_if_Foundry_instance     0       UNSAT
+05. check A5_PMAT_conservation_gated     0       UNSAT
+06. check A6_guardian_reject_spectral_or_nonfinite     0       UNSAT
+07. check A7_gap_stub_definition_records     0       UNSAT
+
+=== remaining INV_* checks (individually) ===
+-- INV_LambdaM_scalar_placeholder --
+00. check INV_LambdaM_scalar_placeholder     0       UNSAT
+Error
+  0. failed to save receipt: /workspace/hcalc/alloy/logs/alloy-out-inv/INV_LambdaM_scalar_placeholder/receipt.json
+TIMEOUT_OR_FAIL INV_LambdaM_scalar_placeholder
+-- INV_step_shape_bridge_axiom_gap --
+00. check INV_step_shape_bridge_axiom_gap     0       UNSAT
+-- INV_prime_index_bounded_to_P64 --
+00. check INV_prime_index_bounded_to_P64     0       UNSAT
+-- INV_recursion_uses_prime_index --
+00. check INV_recursion_uses_prime_index     0       UNSAT
+-- INV_contract_measure_non_increase --
+00. check INV_contract_measure_non_increase but 8 int, exactly 1 ActiveInstance, exactly 1 HCALCInstance, 3 Time, 3 State, 2 TpMap, 1 HCALC_Xi, 1 COp, 1 Intermediate
+19. Run show_foundry_trace for 4 but 8 int, exactly 1 ActiveInstance, exactly 1 FoundryInstance, 3 Time, 3 State
+
+=== exec (all commands) ===
+=== A* recheck 2026-10-07T09:18:31-07:00 ===
+=== INV_LambdaM recheck ===

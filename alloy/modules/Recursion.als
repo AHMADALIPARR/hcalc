@@ -2,34 +2,26 @@
  * Copyright (C) 2026 HCALC / Foundry J contributors
  * SPDX-License-Identifier: AGPL-3.0-only
  *
- * Module: Recursion — prime-indexed recursion stage (bounded, not unrestricted).
- * Cite: FOUNDRY_J_CROSSLINKS.md §0; HCALC pipeline: prime-indexed recursion.
- * PENDING-SPEC-GAPID: Gap-T-p, Gap-X-state.
- * Safety: bounded evolution via finite Time (State module).
+ * Module: Recursion — prime-indexed recursion (bounded, not unrestricted).
+ * Cite: FOUNDRY_J_CROSSLINKS.md §0; HCALC pipeline.
+ * GapId: Gap-Tp-from-P64 (COHERENCE.md)
+ * Core witnesses (intent): rec_step, P64.
  */
 
-module hcalc/modules/Recursion
+module modules/Recursion
 
-open hcalc/modules/State
-open hcalc/modules/PrimeIndex
-open hcalc/modules/Transform
+open modules/State
+open modules/PrimeIndex
+open modules/Transform
 
-/* Recursion step: apply T_p at a prime index along Time.
- * Provenance: derived — structural next-state wiring for skeleton equation.
- * Core witness (intent, not Alloy proof): rec_step, P64 */
-pred recurse_via_Tp[t: Time, tp: TpMap, s': State] {
+pred recurse_via_Tp[t: Time, tp: TpMap, sNext: State] {
   tp.index in P64Carrier.primes
-  let s = t.at |
-    some s => s' in s.(tp.apply)
+  sNext in (t.at).(tp.apply)
 }
 
-/* Bounded recursion: every next Time is reached by at most one recursive edge
- * in the abstract pipeline (no unrestricted fixpoint search in Alloy).
- * Provenance: derived — safety-style constraint (bounded evolution). */
+/* Assert id: INV_bounded_recursion_depth */
 fact INV_bounded_recursion_depth {
-  /* INV_bounded_recursion_depth */
   all t: Time | lone t.next
-  /* finite Time sig + linear chain already caps depth */
 }
 
 assert INV_recursion_uses_prime_index {

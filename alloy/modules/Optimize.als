@@ -3,23 +3,20 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Module: Optimize — optimization objective as axiom-gap (UNDEFINED in source).
- * Cite: HCALC pipeline stage "optimize"; FOUNDRY_J_CROSSLINKS.md (no Foundry objective).
- * PENDING-SPEC-GAPID: (await Spec) — do NOT invent an objective theorem.
+ * Cite: HCALC pipeline "optimize"; no Foundry objective in FOUNDRY_J_CROSSLINKS.
+ * GapId: Gap-OptObj (COHERENCE.md)
  */
 
-module hcalc/modules/Optimize
+module modules/Optimize
 
-open hcalc/modules/State
+open modules/State
 
-/* Objective is UNDEFINED — underspecified predicate only.
- * Provenance: axiom-gap — no invented loss/utility formula. */
+/* Provenance: axiom-gap — no invented loss/utility formula. */
 sig Objective {
-  /* opaque score on State; no semantics claimed */
   score: State -> lone Int
 }
 
 pred objective_underspecified {
-  /* Presence of Objective atoms is allowed; no optimality theorem asserted. */
   all o: Objective | all s: State | lone s.(o.score)
 }
 
