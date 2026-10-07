@@ -70,3 +70,35 @@ Provenance tags: `source-claim` | `axiom-gap` | `derived`.
 | Gap-Converge | Convergence monitors; uniqueness |
 
 **FAIL-open:** `sorry` / Alloy `unsat` failure / missing definition-record (**A7**) ⇒ SKIP or FAIL — never PASS.
+
+---
+
+## Infrastructure Gap-* (Lean toolchain stubs) — ACCEPTED
+
+Provisional IDs from HCALC Lean first cut (`lake build` exit 0, Mathlib deferred). Spec **accepts these names as canonical**; do not rename without Spec update. They are **infrastructure only** — not HCALC domain axioms. Closing path: replace with Mathlib `Real` / proven Foundry defs when ready; until then FAIL-open (axioms OK, never silent PASS).
+
+| GapId | Role | Lean surface | Status | Provenance |
+|-------|------|--------------|--------|------------|
+| Gap-Real-arith | Opaque `Real` + basic arith/order facts absent Mathlib | `Hcalc/RealStub.lean` | accepted infra | axiom-gap (toolchain) |
+| Gap-Foundry-StateOps | Foundry recurrence carrier + add/smul/zero (≠ HCALC `State`) | `Hcalc/Foundry.lean` | accepted infra for L3/L4 | axiom-gap (toolchain) |
+| Gap-Foundry-FinMax | `finMax` for Gershgorin-style bounds | `Hcalc/Foundry.lean` | accepted infra for L2 | axiom-gap (toolchain) |
+| Gap-Foundry-Norm | Opaque weight / nonlinear norms for coded q-estimate | `Hcalc/Foundry.lean` | accepted infra for L4 | axiom-gap (toolchain) |
+| Gap-Foundry-Div | Real division for soft-project scale | `Hcalc/Foundry.lean` | accepted infra for L4 | axiom-gap (toolchain) |
+| Gap-Foundry-SoftScale | Opaque soft-project scale + branch laws | `Hcalc/Foundry.lean` | accepted infra for L4 / A3 | axiom-gap (toolchain) |
+
+**Rule:** These must not be used to discharge Gap-ShapeMap / L7 or to invent Λm, HCALC-Ξ, C, or T_p.
+
+---
+
+## Steering aliases (G-*)
+
+Stable short aliases used by Hilbert / Alloy / Lean agents. Prefer these in tags; Spec GapIds remain canonical.
+
+| Alias | Canonical GapId | Statement | Justification |
+|-------|-----------------|-----------|---------------|
+| **G-SHAPE** | Gap-ShapeMap | Nested \(X'=\Xi(t,\Lambda_m\cdot C[T_p(X)])\) vs Foundry additive \(x'=\Xi x+\Lambda T(x)+g\) (prop **39**) must not be silently identified | source under-specified; L7 blocked |
+| **G-Lm** | Gap-Λm-scalar | No scalar \(\Lambda_m\) verb; Foundry `lambda_schedule` is a **vector** | source under-specified |
+| **G-C** | Gap-C-wrapper | `spectral_analyze` classifies; does not wrap as \(C[\cdot]\) | source under-specified |
+| **G-Tp** | Gap-Tp-from-P64 | No \(T_p\) constructed from `P64` / `PrimeMask` yet | source under-specified |
+
+Core cite-only (not definitions): `P64`, `pmat_compose`, `spectral_analyze`, `soft_project`, `q_estimate`, `synth_weights`, `rec_step`, `rec_run`, `ace_certify` — see foundry-j `spec/J_API.md`, `j/BOXING.md`, `spec/GAP_DECISIONS.md`.

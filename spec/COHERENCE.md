@@ -89,6 +89,20 @@ Canonical IDs for Alloy Provenance tags / Lean axioms. Provenance values: `sourc
 | **Gap-ContractAlg** | Algorithm realizing \(C\) (not merely a contractive flag) | `axiom-gap` | **A2**, **Gap-C-wrapper** |
 | **Gap-OptObj** | Optimization objective \(\mathcal{J}\) | `axiom-gap` | pipeline tail |
 
+Infrastructure toolchain stubs (accepted, not domain): **Gap-Real-arith**, **Gap-Foundry-StateOps**, **Gap-Foundry-FinMax**, **Gap-Foundry-Norm**, **Gap-Foundry-Div**, **Gap-Foundry-SoftScale** — see [`AXIOMS.md`](AXIOMS.md) § Infrastructure.
+
+
+
+
+### Steering aliases
+
+| Alias | Canonical | Note |
+|-------|-----------|------|
+| G-SHAPE | Gap-ShapeMap | Do not equate Foundry **39** with HCALC nested form |
+| G-Lm | Gap-Λm-scalar | λ schedule is vector ≠ Λm scalar |
+| G-C | Gap-C-wrapper | spectral_analyze ≠ C[·] |
+| G-Tp | Gap-Tp-from-P64 | P64/PrimeMask candidates ≠ Tp |
+
 #### Alloy asserts A1–A7 (from FOUNDRY_J_CROSSLINKS)
 
 | ID | Assert (informal) | Foundry anchor | Provenance |

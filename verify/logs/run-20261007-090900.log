@@ -1,0 +1,37 @@
+Using jconsole: /home/box/j/j9.7/bin/jconsole
+Working directory: /workspace/hcalc/verify
+Timestamp (PT): 2026-10-07 09:09:00 PDT
+HCALC Core present: no
+Foundry load: cite-only (not loaded)
+────────────────────────────────────────
+HCALC — Verification Harness (scaffold)
+═══════════════════════════════════════
+jconsole: j9.7.1/j64/linux/commercial/www.jsoftware.com/2026-04-06T04:00:54/clang-14-0-0/SLEEF=0
+core: none (HCALC Core not present; Foundry cite-only)
+rule: no fake PASS; SKIP/BLOCKED until Core + Gap discharge
+
+── H-* properties + SKIP registry ──
+SKIP H-A1: Gap-Tp-from-P64 / no HCALC Core; Foundry P64 cite-only
+SKIP H-A2: no HCALC Core; Foundry spectral (33–34) cite-only
+SKIP H-A3: no HCALC Core; Foundry soft_project (43) cite-only
+SKIP H-A4: Gap-ShapeMap / no instance tag without HCALC Core; Foundry rec_step cite-only
+SKIP H-A5: PMAT unused / no HCALC Core; Foundry pmat_compose cite-only
+SKIP H-A6: no HCALC Core; Foundry guardian (55) cite-only
+SKIP H-A7: A7 definition-record absent: Gap-Λm-scalar Gap-Ξ Gap-C-wrapper Gap-Tp-from-P64; no HCALC Core
+BLOCKED H-SHAPE: SKIP-ShapeBridge (L7 BLOCKED) / Gap-ShapeMap; additive ≠ nested
+SKIP H-L5: SKIP-L5-proof / L5 unfinished; Foundry prop 41 narrative cite-only
+SKIP H-NEST: L6 gaps (Λm Ξ C Tp undefined); nested numeric tests deferred
+SKIP SKIP-ShapeBridge: Gap-ShapeMap / L7 blocked; additive ≠ nested
+SKIP SKIP-Λm-formula: Gap-Λm-scalar; no scalar formula
+SKIP SKIP-C-instep: Gap-C-wrapper; Foundry tests are post-hoc
+SKIP SKIP-Tp-law: Gap-Tp-from-P64; P_64 is index set only
+SKIP SKIP-Ξ-op: Gap-Ξ; schedule ≠ operator
+SKIP SKIP-OptObj: Gap-OptObj undefined
+SKIP SKIP-L5-proof: L5 unfinished
+SKIP SKIP-Goldilocks16: Foundry prop 16 FAIL — do not claim PASS lift
+
+═══════════════════════════════════════
+PASS=0 FAIL=0 SKIP=17 BLOCKED=1
+────────────────────────────────────────
+exit_code=0
+log=logs/run-20261007-090900.log
