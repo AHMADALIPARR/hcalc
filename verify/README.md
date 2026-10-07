@@ -3,32 +3,20 @@
   SPDX-License-Identifier: AGPL-3.0-only
 -->
 
-# HCALC Verify (stub)
+# HCALC Verify
 
-**Owner:** Verify / Foundry J Verify (harness not written yet).  
-**License:** AGPL-3.0-only.
+**Owner:** Verify. **License:** AGPL-3.0-only.  
+**Map:** [`PROPERTY_MAP.md`](PROPERTY_MAP.md) ← [`../spec/PROPERTIES.md`](../spec/PROPERTIES.md) + [`../spec/PRODUCTION.md`](../spec/PRODUCTION.md).  
+**Core:** `../j/hcalc.ijs`.
 
-## Gate proposal (Foundry Verify pattern)
+## Run
 
-Authoritative outline for HCALC: [`../spec/PROPERTIES.md`](../spec/PROPERTIES.md).
+```bash
+./run.sh   # jconsole; writes logs/run-*.log
+```
 
-Foundry J Verify (cite-only; do not copy bodies into HCALC):
+Latest measured: `logs/run-20261007-093541.log` — **PASS=9 FAIL=0 SKIP=9 BLOCKED=0**.
 
-| Artifact | Path under `/workspace/foundry-j/verify/` | Role |
-|----------|------------------------------------------|------|
-| PROPERTIES | paired with `../spec/PROPERTIES.md` | Numbered math properties |
-| PROPERTY_MAP | `PROPERTY_MAP.md` | Authoritative prop↔test map |
-| INVENTORY | `INVENTORY.md` | Named tests + PASS/FAIL/SKIP |
-| prop_N logs | `logs/` | Per-run evidence |
-| Core surface | `../j/foundry.ijs` + `spec/J_API.md` | Verbs under test |
+## Policy
 
-**Policy:** `sorry` (Lean) / Alloy `unsat` failure / missing definition-record (**A7**) ⇒ **SKIP** or **FAIL-open** — never PASS.  
-Match Foundry: SKIP registry names + reason; seal Lean↔Alloy↔J when claimed.
-
-## Out of scope for this stub
-
-- Full J harness / `prop_N` scripts for HCALC nested form  
-- Closing **G-SHAPE** / L7 without Spec  
-- Invented Λm / Ξ / C / Tp formulas  
-
-Do not implement the full harness here. Point Core/Verify work at Foundry first; HCALC Verify inherits the gate once Spec freezes nested-form monitors.
+Measured PASS only. No fake PASS. SKIP-Goldilocks16 remains (Foundry prop 16). Registry SKIP rows document closure pointing at H-* PASS.

@@ -2,10 +2,9 @@
  * Copyright (C) 2026 HCALC / Foundry J contributors
  * SPDX-License-Identifier: AGPL-3.0-only
  *
- * Module: Converge — convergence hypotheses as axiom-gap; Guardian A6.
- * Cite: FOUNDRY_J_CROSSLINKS.md §2 item 5; §3 A6; props 41, 46, 55.
- * Core witnesses (intent): spectral_analyze, q_estimate.
- * GapId: Gap-Converge (COHERENCE.md)
+ * Module: Converge — production Hyp ⇒ Banach + residual→0; Guardian A6.
+ * Cite: PRODUCTION.md §8 Gap-Converge CLOSED; FOUNDRY_J_CROSSLINKS §3 A6.
+ * Provenance: SpecDefined (converge hyp); source-claim (A6)
  */
 
 module modules/Converge
@@ -18,28 +17,29 @@ sig Residual {
   belowTol: Int
 }
 
-/* Provenance: axiom-gap — FOUNDRY_J_CROSSLINKS §2 item 5 / Lean L5 unfinished. */
+/* Production ConvergenceHyp: under Spec Hyp, discharged with residual witness.
+ * Provenance: SpecDefined — PRODUCTION.md §8 (L5 dischargeable). */
 sig ConvergenceHyp {
-  discharged: lone Int
+  discharged: lone Int,
+  hypHolds: Int
 }
 
-pred convergence_hyps_axiom_gap {
+pred convergence_hyps_production {
   all h: ConvergenceHyp |
-    h.discharged = 1 implies (some r: Residual | r.belowTol = 1)
+    (h.discharged = 1 implies (h.hypHolds = 1 and some r: Residual | r.belowTol = 1))
 }
 
-/* Assert id: INV_converge_hyps_axiom_gap */
 fact fact_converge_hyps {
-  convergence_hyps_axiom_gap
+  convergence_hyps_production
 }
 
-assert INV_converge_hyps_axiom_gap {
-  convergence_hyps_axiom_gap
+assert INV_converge_hyps_production {
+  /* INV_converge_hyps_production — Spec Hyp + residual (was axiom-gap) */
+  convergence_hyps_production
 }
 
 /* A6 — Guardian: reject spectral radius ≥ 1 or non-finite.
- * Provenance: source-claim — FOUNDRY_J_CROSSLINKS §3 A6 / prop 55.
- * Core witness (intent): spectral_analyze */
+ * Provenance: source-claim — FOUNDRY_J_CROSSLINKS §3 A6 / prop 55. */
 abstract sig GuardianVerdict {}
 one sig Accept, Reject extends GuardianVerdict {}
 

@@ -2,8 +2,7 @@
 Copyright (C) 2026 HCALC contributors
 SPDX-License-Identifier: AGPL-3.0-only
 
-Structural invariants only. Domain-specific claims are axioms (Gap-*)
-or theorems with those properties as hypotheses — no invented physics.
+Structural invariants for production nested `step`.
 -/
 
 import Hcalc.Pipeline
@@ -12,46 +11,28 @@ namespace Hcalc.Invariants
 
 open Hcalc Pipeline
 
-/-- A state predicate preserved by nested `step` for all times / primes / scalars. -/
-def IsInvariant (P : State → Prop) : Prop :=
-  ∀ (t : Time) (x : State) (p : Nat) (Λm : Scalar),
-    P x → P (step t x p Λm)
+/-- Predicate preserved by nested `step` for all times / ε / δ. -/
+def IsInvariant {n : Nat} (P : Carrier n → Prop) : Prop :=
+  ∀ (ε δ : Scalar) (t : Time) (x : Carrier n),
+    P x → P (step (n := n) ε δ t x)
 
-/-- `True` (as a state predicate) is invariant. -/
-theorem true_invariant : IsInvariant (fun _ => True) := by
-  intro t x p Λm hx
+theorem true_invariant {n : Nat} : IsInvariant (n := n) (fun _ => True) := by
+  intro ε δ t x hx
   trivial
 
-/-- Intersection (pointwise ∧) of invariants is invariant. -/
-theorem invariant_and (P Q : State → Prop)
-    (hP : IsInvariant P) (hQ : IsInvariant Q) :
-    IsInvariant (fun x => P x ∧ Q x) := by
-  intro t x p Λm hx
-  exact ⟨hP t x p Λm hx.1, hQ t x p Λm hx.2⟩
+theorem invariant_and {n : Nat} (P Q : Carrier n → Prop)
+    (hP : IsInvariant (n := n) P) (hQ : IsInvariant (n := n) Q) :
+    IsInvariant (n := n) (fun x => P x ∧ Q x) := by
+  intro ε δ t x hx
+  exact ⟨hP ε δ t x hx.1, hQ ε δ t x hx.2⟩
 
-/-- Invariance under a restricted prime set (structural weakening). -/
-def IsInvariantOnPrimes (P : State → Prop) (Allowed : Nat → Prop) : Prop :=
-  ∀ (t : Time) (x : State) (p : Nat) (Λm : Scalar),
-    Allowed p → P x → P (step t x p Λm)
+/-- Invariance under production defaults. -/
+def IsInvariantProd {n : Nat} (P : Carrier n → Prop) : Prop :=
+  ∀ (t : Time) (x : Carrier n), P x → P (stepProd (n := n) t x)
 
-theorem invariant_implies_on_primes (P : State → Prop) (Allowed : Nat → Prop)
-    (h : IsInvariant P) : IsInvariantOnPrimes P Allowed := by
-  intro t x p Λm _ hx
-  exact h t x p Λm hx
-
-/-- P64-restricted invariant (ties to Inv-P64 structurally). -/
-def IsInvariantOnP64 (P : State → Prop) : Prop :=
-  IsInvariantOnPrimes P primeIndexFromP64
-
-theorem invariant_implies_on_P64 (P : State → Prop) (h : IsInvariant P) :
-    IsInvariantOnP64 P :=
-  invariant_implies_on_primes P primeIndexFromP64 h
-
-/-- False is not forced as invariant without hypotheses (witness: we do not claim it). -/
--- Structural: if a predicate never holds, invariance is vacuous on the antecedent.
-theorem vacuous_invariant (P : State → Prop) (hNever : ∀ x, ¬ P x) :
-    IsInvariant P := by
-  intro t x p Λm hx
-  exact (hNever x hx).elim
+theorem invariant_implies_prod {n : Nat} (P : Carrier n → Prop)
+    (h : IsInvariant (n := n) P) : IsInvariantProd (n := n) P := by
+  intro t x hx
+  exact h epsProd deltaProd t x hx
 
 end Hcalc.Invariants

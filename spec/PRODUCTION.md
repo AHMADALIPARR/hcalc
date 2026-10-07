@@ -57,8 +57,9 @@ For dimension \(n\), use primes \(p_{j \bmod 64}\).
 (T_p\, x)_j \;=\; \alpha_j \cdot x_j.
 \]
 
-So \(\varphi\) is the **identity on coordinates** (diagonal action); \(\alpha\) is the synth_weights/primes-style schedule on `P64`.  
-Equivalent view: \(T_p = \mathrm{diag}(\alpha)\).  
+So \(\varphi\) is the **identity on coordinates** (diagonal action).
+Equivalent view: \(T_p = \mathrm{diag}(\alpha)\).
+**Provenance:** \(\alpha\) law is **`spec-def`** (HCALC Spec) — **not** a Foundry source-claim. \(P_{64}\) list alone is Foundry **23** / Lean L1.
 **Not** Sedona/PIRTM tooling; **not** full PMAT recursion.
 
 **Provenance (§2):** `P64` list = Foundry **source-claim** (prop **23**). The weight law $\alpha_j=1/(1+\log p_{j\bmod 64})$ is **`spec-def`** — **not** a Foundry PROPERTY / not `source-claim` from foundry-j.
@@ -72,7 +73,7 @@ Let \(q\) be the operator-norm estimate via Gershgorin, with power-iteration fal
 q \;:=\; \|D(T_p)\|_{\mathrm{est}}.
 \]
 
-**In-step governor** (soft_project wired as operator — **not** post-hoc `ace_certify`):
+**In-step governor** — Spec-defined **state scale-or-id** (not post-hoc `ace_certify`):
 
 \[
 C(x) \;=\;
@@ -82,7 +83,11 @@ x & \text{otherwise.}
 \end{cases}
 \]
 
-I.e. \(C = s\cdot\mathrm{id}\) with \(s=\mathrm{softProjectScale}(q,\varepsilon)\).
+I.e. \(C = s\cdot\mathrm{id}\) on **state**, with \(s=(1-\varepsilon)/q\) when over margin.
+
+**Provenance (Foundry pass 2):** \(C\) is **`spec-adapt`** of the scale-factor *idea* \((1-\varepsilon)/q\).
+**REJECT** identity with Foundry `soft_project` **43** (which scales schedule vectors \(\Xi,\Lambda\), not state).
+Foundry **43** remains the coded schedule soft_project on the **FoundryAdditive** path. Production \(q=\|D(T_p)\|_{\mathrm{est}}\) is Spec \(q\), not Foundry **42** schedule \(q\).
 
 **Provenance (§3):** Production `C` is **`spec-adapt`**: it reuses the *scale-or-id* idea \((1-\varepsilon)/q\) as an **algorithmic cousin** of Foundry `soft_project` (prop **43**), but it is **not** symbol-identical to **43**. Foundry **43** scales schedule weights \(\Xi,\Lambda\) under Foundry \(q\) (prop **42**); production `C` scales the **state** under Spec \(q:=\|D(T_p)\|_{\mathrm{est}}\). Do **not** tag `C` as Foundry `source-claim` for **43**. Shared helper name `softProjectScale` OK; **Foundry `soft_project` API stays schedule-scaling** (prop **43**). Production `C` remains Spec-wiring / **spec-adapt** (state scale).
 
@@ -116,7 +121,16 @@ X_{t+1} = \xi_t\cdot\bigl(\Lambda_m\cdot C(T_p(X_t))\bigr) + g_t.
 
 **ACCEPTED:** Gap-ShapeMap is a **non-identity** morphism. soft_project remains **Foundry-coded** (props **42–43**) and is *used by* HCALC `C` under this Spec — that is Spec wiring, not a Foundry identity claim.
 
-#### Explicit morphism `InstanceBridge`
+#### Dual `bridgeMode` (keep both; never silent equate)
+
+| `bridgeMode` | Meaning | Prop-**39**? |
+|--------------|---------|--------------|
+| **NestedFaithful** | production verb = `hcalcStep` (nested) | **no** — Spec nested; ≠ classical **39** |
+| **FoundryAdditive** | diagnostic `toFoundryStep` via InstanceBridge param table | **yes-shaped** morphism toward **39**; still ≠ nested |
+
+`InstanceBridge` is the **parameter table** \(T:=C\circ T_p\), \(\Lambda_{\mathrm{vec}}:=\Lambda_m\cdot\mathbf{1}\), \(\Xi_{\mathrm{vec}}:=\xi_t\), \(g:=g_t\) — a **non-identity** morphism, never `rfl`.
+
+#### Explicit morphism `InstanceBridge` (feeds FoundryAdditive mode)
 
 Let HCALC state \(x\in\texttt{HCALC.Carrier}\). Define a **labeled instance map** (Lean: `InstanceBridge`, Alloy: `bridgeMode = InstanceBridge`):
 
@@ -171,11 +185,12 @@ These are **different** morphisms in general (\(\xi_t\cdot x\) term present only
 
 ### 7. Gap-ContractAlg — CLOSED
 
-Algorithm (Foundry **33–43**):
+Algorithm:
 
-1. Estimate \(q=\|D(T_p)\|_{\mathrm{est}}\) by Gershgorin; if tight, power-iteration fallback (**35–37**).  
-2. Apply soft_project scale as in §3 (**42–43**).  
+1. Estimate Spec \(q=\|D(T_p)\|_{\mathrm{est}}\) by Gershgorin; power-iteration fallback (Foundry measures **33–37**, Spec-wired).
+2. Apply **state** scale-or-id \(C\) as in §3 (`spec-adapt`; ≠ schedule soft_project **43**).
 3. Form \(\Lambda_m\) as in §4.
+4. On FoundryAdditive path only: Foundry schedule soft_project **43** may still apply to \(\Xi,\Lambda\) schedules as coded.
 
 ### 8. Gap-Converge — CLOSED (L5 dischargeable)
 
@@ -222,7 +237,7 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 | Gap-C-wrapper | axiom-gap | **CLOSED** scale-or-id on Spec \(q\) (**spec-adapt**; cousin of **43**, ≠ **43**) | C = scale-or-id | `def C` | Contraction spectral/q |
 | Gap-Λm-scalar | axiom-gap | **CLOSED** scalar min formula | Λm scalar bound assert | `def LambdaM` | Stabilizing range |
 | Gap-Ξ | axiom-gap | **CLOSED** \(\xi_t y + g_t\), Uniform default | Ξ affine | `def Xi` | Evolution step shape |
-| Gap-ShapeMap / L7 | blocked | **CLOSED** `InstanceBridge` morphism (NOT rfl / NOT Foundry39≡nested) | Encode InstanceBridge table; forbid symbol identity | **L7** `structure InstanceBridge` + Option B/C thms | H-SHAPE → PASS only for InstanceBridge witness, never identity |
+| Gap-ShapeMap / L7 | blocked | **CLOSED** dual `bridgeMode` NestedFaithful|FoundryAdditive + InstanceBridge table (NOT rfl; NestedFaithful ≠ prop39) | Encode InstanceBridge table; forbid symbol identity | **L7** `structure InstanceBridge` + Option B/C thms | H-SHAPE → PASS only for InstanceBridge witness, never identity |
 | Gap-ContractAlg | axiom-gap | **CLOSED** Gershgorin→power-iter→soft_project | A2/A3 production wiring | defs + thms | Checks B |
 | Gap-Converge | axiom-gap | **CLOSED** Hyp ⇒ Banach + residual→0 | Guardian + residual | **L5** under Hyp | Residual discharge |
 | Gap-OptObj | axiom-gap | **CLOSED** \(J=\) residual; iterate to tol | OptObj residual | `def J` + loop spec | Optimize/converge props |
@@ -258,7 +273,7 @@ J(X) \;=\; \bigl\| X - \Xi\bigl(t,\, \Lambda_m\cdot C(T_p(X))\bigr) \bigr\|_\inf
 
 ## Core checklist (Foundry J)
 
-Implement verbs: `Tp` from P64 α, in-step `C` soft_project, scalar `Λm`, `Xi` from `xi_schedule`, InstanceBridge step. Cite `P64`, `spectral_analyze`, `soft_project`, `q_estimate`, `synth_weights`, `rec_step`.
+Implement verbs: `Tp` from P64 α, in-step `C` state scale-or-id (`spec-adapt`), scalar `Λm`, `Xi` from `xi_schedule`, InstanceBridge step. Cite `P64`, `spectral_analyze`, `soft_project`, `q_estimate`, `synth_weights`, `rec_step`.
 
 ---
 
@@ -271,7 +286,7 @@ Foundry J Core implements production verbs **here**, calling Foundry cite hooks 
 | Verb | Formula source in this file |
 |------|-----------------------------|
 | `tp_from_p64` | §2 Gap-Tp-from-P64 |
-| `c_wrap` | §3 Gap-C-wrapper (uses Foundry-coded soft_project) |
+| `c_wrap` | §3 Gap-C-wrapper (state scale-or-id; ≠ soft_project **43**) |
 | `lam_m_from_bound` | §4 Gap-Λm-scalar |
 | `hcalc_xi_apply` | §5 Gap-Ξ |
 | `hcalc_step` | nested §5; **not** `rec_step` |
@@ -286,3 +301,4 @@ Draft names from `foundry-j/j/HCALC_API_DRAFT.md` are **accepted**. Leave Foundr
 - 2026-10-07: ShapeMap → explicit **InstanceBridge** (Foundry J Spec review); Core path `/workspace/hcalc/j/`.
 - 2026-10-07: Pass-3 nits — §3 schedule-scaling note; Alloy checklist InstanceBridge; §8 Hyp on hcalcStep.
 - 2026-10-07: Pass-2 absorb — `C`/`q` **spec-adapt** (≠ Foundry **43**/**42**); \(\alpha\) **spec-def**; dual NestedFaithful|FoundryAdditive; residual \(\ell_\infty\neq\ell_2\) note.
+- 2026-10-07: Fold Foundry pass 2 — C ≠ soft_project#43; α `spec-def`; NestedFaithful ≠ prop39; dual bridgeMode kept.
