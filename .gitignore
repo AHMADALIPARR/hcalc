@@ -1,16 +1,16 @@
 # Lean / Lake
 lean/.lake/
-lean/build/
-lean/lake-packages/
+**/build/
+lake-packages/
 *.olean
 *.ilean
-*.c
-*.o
 
-# Alloy / Java
-alloy/logs/*.tmp
-*.class
-.alloy/
+# Alloy JAR (local install; see alloy/README.md) + solution dumps
+alloy/tools/
+*.jar
+alloy/logs/alloy-out*/
+alloy/logs/alloy-check-a*.txt
+alloy/logs/alloy-check-inv*.txt
 
 # Editor / OS
 .DS_Store
@@ -27,8 +27,3 @@ __pycache__/
 # Secrets
 .env
 *.pem
-
-alloy/tools/
-*.jar
-lean/.lake/
-lean/build/
