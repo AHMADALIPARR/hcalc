@@ -101,7 +101,9 @@ residual_linf =: 4 : '>./ | (,x) - ,y'
 NB. ── 1. tp_from_p64  (PRODUCTION §2) ─────────────────────────────────────────
 NB. Monad: tp_from_p64 x → Tp(x)
 tp_from_p64 =: 3 : 0
+  NB. Unbox/ravel: Verify may pass boxed vectors
   xv =. , >^:L. y
+  if. 32 = 3!:0 xv do. xv =. , > xv end.
   a =. tp_alpha # xv
   a * xv
 )
@@ -209,8 +211,10 @@ hcalc_step_info =: 3 : 0
   mid =. lam * CX
   xnext =. (xi ; g) hcalc_xi_apply mid
   res =. xv residual_linf xnext
+  NB. Double-box so 'xn info'=. leaves info as one box; >info yields field boxes
+  NB. (Verify: boxed=.>info then (<'InstanceBridge') e. boxed)
   info =. q ; eps ; lam ; xi ; res ; BRIDGE_MODE
-  xnext ; <info
+  xnext ; <<info
 )
 
 NB. ── 6. hcalc_run  (PRODUCTION §9) ───────────────────────────────────────────
@@ -264,7 +268,7 @@ NB. Different morphisms; no rfl / no symbol identity.
 to_foundry_step_diagnostic =: 3 : 0
   (EPS_DEFAULT ; XI_UNIFORM ; '') to_foundry_step_diagnostic y
 :
-  xv =. , y
+  xv =. , >^:L. y
   xb =. boxxopen x
   eps =. 0 ". ": > 0 { xb , <EPS_DEFAULT
   xi  =. 0 ". ": > 1 { xb , <XI_UNIFORM
@@ -274,6 +278,25 @@ to_foundry_step_diagnostic =: 3 : 0
   lam =. eps lam_m_from_bound n
   Tx =. eps c_wrap tp_from_p64 xv
   (xi * xv) + (lam * Tx) + g
+)
+
+
+NB. ── Verify / Spec aliases (cite surface) ────────────────────────────────────
+NB. P64 under hcalc name (H-A1); copy after Foundry load
+P64_hcalc_ =: P64_foundry_
+
+NB. q_est_from_alpha α — ‖D(Tp)‖_est for diagonal = max|α| (H-A2/H-A6)
+q_est_from_alpha =: 3 : '>./ | , >^:L. y'
+
+NB. c_wrap_check_hcalc_ — H-A3 assertion helper (scale-or-id on state)
+c_wrap_check_hcalc_ =: 3 : 0
+  s =. soft_project_scale 2 , 0.05
+  assert. s = 0.95 % 2
+  s2 =. soft_project_scale 0.5 , 0.05
+  assert. s2 = 1
+  x =. 1 1 1 1
+  assert. (0.05 c_wrap tp_from_p64 x) -: tp_from_p64 x
+  1
 )
 
 cocurrent 'base'
