@@ -21,7 +21,7 @@ Provenance tags: `source-claim` | `axiom-gap` | `derived` | `SpecDefined`.
 |----|------------------|------|-----------|-----------------|------------|
 | A1 | `#P_64=64`; elements = first-64 primes | assert | L1 | PROPERTIES **23**; Core `P64` | source-claim |
 | A2 | `contractive(J,ε) ↔ gershgorin(J)<1-ε` (+ opt. power-iter 37) | assert | L2 | **33–37**; `spectral_analyze`, `gershgorin_*`, `power_iteration*` | source-claim |
-| A3 | if `q>1-ε` then soft-projected scale used (**in-step C**) | assert | L4 | **43**; `soft_project`, `q_estimate`; PRODUCTION §3 | source-claim |
+| A3 | Foundry schedule soft_project when `q>1-ε` (**43** as coded) — **distinct from** production in-step `C` (state scale-or-id, **spec-adapt**) | assert | L4 | **43**/`soft_project`/`q_estimate` = **source-claim** (schedules only); production `C` → PRODUCTION.md / **spec-adapt** | source-claim (Foundry **43** only) |
 | A4 | affine Foundry recurrence **only if** `instance=Foundry` / FoundryAdditive diagnostic | assert | L3 | **39**; `rec_step`, `rec_run` | source-claim |
 | A5 | PMAT conservation on insert-set | assert | (PMAT defs) | **29**; `pmat_compose` | source-claim |
 | A6 | guardian rejects spectral_radius≥1 or non-finite | assert | — | **55** | source-claim |
@@ -81,6 +81,8 @@ Provenance for all rows above: **SpecDefined** (not axiom-gap).
 
 
 ### Provenance (production close — Foundry J Spec pass-2)
+**A3 provenance split:** Alloy may keep a Foundry-instance assert for schedule soft_project (**43**, `source-claim`). Production in-step `C` is **SpecDefined** / **spec-adapt** per PRODUCTION.md — do not merge the two under one `source-claim` tag for **43**.
+
 
 - **Gap-Tp-from-P64** \(\alpha\) law: `spec-def` (P64 list alone is Foundry **source-claim** **23**).
 - **Gap-C-wrapper**: `spec-adapt` — algorithmic cousin of Foundry soft_project **43**, **not** symbol identity (43 scales schedules; production C scales state under Spec \(q=\|D(T_p)\|\)).
