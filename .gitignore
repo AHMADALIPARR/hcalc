@@ -1,0 +1,4 @@
+alloy/tools/*.jar
+alloy/logs/
+*.olean
+.lake/
